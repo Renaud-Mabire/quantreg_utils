@@ -26,48 +26,49 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
     stop("quantiles must be numeric and between 0 and 1.")
   }
   
-  # List creation
+  # List creation to store the results
   formulas <- list()
   qrs <- list()
   sum_qrs <- list()
   plots <- list()
   colors <- grDevices::rainbow(length(quantiles))
   
-  # Function to determine significance stars
+  # Function to determine significance stars for the coefficients of the quantile regression
   get_stars <- function(p.value){
     if (p.value < 0.001) return("***")
     else if (p.value < 0.01) return("**")
     else if (p.value < 0.05) return("*")
     else return("ns")
   }
-  
+  # Plot creation 
   p <- ggplot2::ggplot(df, ggplot2::aes_string(x = independent_var, y = dependent_var)) +
     ggplot2::geom_point(alpha = 0.6, color = "grey") +
     ggplot2::labs(x = independent_var, y = dependent_var) +
     ggplot2::theme_minimal() +
     ggplot2::theme_light() +
     ggplot2::theme(legend.position = "bottom")  # place the legend at the bottom
+
+  qr_lines <- data.frame() # data frame to store the quantile regression lines
   
-  qr_lines <- data.frame()
-  
+  # Quantile regression for each quantile and plot creation
   for (i in 1:length(quantiles)) {
-    
-    formula_str <- paste(dependent_var, "~", independent_var)
+  
+    formula_str <- paste(dependent_var, "~", independent_var) # formula for the quantile regression
     
     if (!is.null(covariates)) {
-      formula_str <- paste(formula_str, "+", paste(covariates, collapse = " + "))
+      formula_str <- paste(formula_str, "+", paste(covariates, collapse = " + ")) # add the covariates to the formula
     }
     
-    formula <- as.formula(formula_str)
-    qr <- quantreg::rq(formula, data = df, tau = quantiles[i], ...)
-    sum_qr <- summary(qr, se = "boot")
-    coeff <- coef(qr)
-    range_var <- seq(min(df[[independent_var]]), max(df[[independent_var]]), length.out = 100)
+    formula <- as.formula(formula_str) # convert the formula to a formula object
+    qr <- quantreg::rq(formula, data = df, tau = quantiles[i], ...) # quantile regression estimation
+    sum_qr <- summary(qr, se = "boot") # summary of the quantile regression estimation with bootstrap standard errors
+    coeff <- coef(qr) # coefficients of the quantile regression
+    range_var <- seq(min(df[[independent_var]]), max(df[[independent_var]]), length.out = 100) # range of the independent variable for the quantile regression line plot
     
     qr_line <- data.frame(independent_var = range_var, 
                           dependent_var = coeff[1] + coeff[2]*range_var, 
                           group = paste0("tau = ", quantiles[i], ": Coefficient ", round(coeff[2], 3), get_stars(sum_qr$coef[2, 4]), 
-                                         "\n95% CI: [", round(sum_qr$coef[2, 1], 3), ", ", round(sum_qr$coef[2, 3], 3), "]"))
+                                         "\n95% CI: [", round(sum_qr$coef[2, 1], 3), ", ", round(sum_qr$coef[2, 3], 3), "]")) # data frame to store the quantile regression line
     
     if (multiple_plots) {
       df_quantile <- df
@@ -95,7 +96,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
     qrs[[i]] <- qr
     sum_qrs[[i]] <- sum_qr
   }
-  
+  # Plot creation for multiple quantiles in one plot
   if (!multiple_plots) {
     p <- p + ggplot2::geom_line(data = qr_lines, ggplot2::aes_string(x = "independent_var", y = "dependent_var", group = "group", color = "group"), size = 1) +
       ggplot2::scale_color_manual(values = setNames(colors, unique(qr_lines$group)))
@@ -106,6 +107,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
     result <- list(formulas = formulas, qrs = qrs, sum_qrs = sum_qrs, plots = grid.arrange)
   }
   
+  # Class definition and return of the result object
   class(result) <- "quantile_plots"
   return(result)
 }
