@@ -38,7 +38,7 @@ models$plots # view regression line plots
 summary(models$fits[[1]]) # view model summary for 1st quantile
 }
 \seealso{
-\code{\link{quantreg::rq}}
+\code{\link{quantreg::rq}, \link{ggplot2::ggplot2}, \link{ggplot2::grDevices}, \link{ggplot2::gridExtra}}
 }
 \keyword{hplot}
 \keyword{regression}
