@@ -42,3 +42,4 @@ summary(models$fits[[1]]) # view model summary for 1st quantile
 }
 \keyword{hplot}
 \keyword{regression}
+\keyword{quantreg}
