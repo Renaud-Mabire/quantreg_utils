@@ -1,6 +1,6 @@
 easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, covariates=NULL, multiple_plots = FALSE, ...) {
   
-  # Verifications
+   # Verifications
   if (!is.data.frame(df)) {
     stop("df must be a data frame.")
   }
@@ -15,7 +15,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
   
   if (!is.null(covariates)) {
     if (is.character(covariates) && length(covariates) == 1) {
-      covariates <- list(covariates)
+      covariates <- as.character(covariates)
     }
     if (!is.character(covariates) || !all(covariates %in% names(df))) {
       stop("All elements of covariates must be character strings and column names in df.")
