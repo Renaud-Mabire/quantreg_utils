@@ -35,11 +35,18 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
   
   # Function to determine significance stars for the coefficients of the quantile regression
   get_stars <- function(p.value){
-    if (p.value < 0.001) return("***")
-    else if (p.value < 0.01) return("**")
-    else if (p.value < 0.05) return("*")
-    else return("ns")
+  if(is.na(p.value)){
+    return("NA")
+  } else if (p.value < 0.001) {
+    return("***")
+  } else if (p.value < 0.01) {
+    return("**")
+  } else if (p.value < 0.05) {
+    return("*")
+  } else {
+    return("ns")
   }
+}
   # Plot creation 
   p <- ggplot2::ggplot(df, ggplot2::aes_string(x = independent_var, y = dependent_var)) +
     ggplot2::geom_point(alpha = 0.6, color = "grey") +
