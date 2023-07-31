@@ -1,10 +1,10 @@
 easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, qr_summary = c("boot", "nid"),covariates=NULL, multiple_plots = FALSE, ...) {
   
-  # Verifications
+   # Verifications
   if (!is.data.frame(df)) {
     stop("df must be a data frame.")
   }
-  
+
   if (!is.character(dependent_var) || !(dependent_var %in% names(df))) {
     stop("dependent_var must be a character string and a column name in df.")
   }
@@ -15,7 +15,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
   
   if (!is.null(covariates)) {
     if (is.character(covariates) && length(covariates) == 1) {
-      covariates <- list(covariates)
+      covariates <- as.character(covariates)
     }
     if (!is.character(covariates) || !all(covariates %in% names(df))) {
       stop("All elements of covariates must be character strings and column names in df.")
@@ -35,11 +35,18 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
   
   # Function to determine significance stars for the coefficients of the quantile regression
   get_stars <- function(p.value){
-    if (p.value < 0.001) return("***")
-    else if (p.value < 0.01) return("**")
-    else if (p.value < 0.05) return("*")
-    else return("ns")
+  if(is.na(p.value)){
+    return("NA")
+  } else if (p.value < 0.001) {
+    return("***")
+  } else if (p.value < 0.01) {
+    return("**")
+  } else if (p.value < 0.05) {
+    return("*")
+  } else {
+    return("ns")
   }
+}
   # Plot creation 
   p <- ggplot2::ggplot(df, ggplot2::aes_string(x = independent_var, y = dependent_var)) +
     ggplot2::geom_point(alpha = 0.6, color = "grey") +
@@ -77,7 +84,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
       
       p_single <- ggplot2::ggplot() +
         ggplot2::geom_point(data = df_quantile, ggplot2::aes_string(x = independent_var, y = dependent_var, color = "color"), alpha = 0.6) +
-        ggplot2::geom_line(data = qr_line, ggplot2::aes_string(x = "independent_var", y = "dependent_var"), colour = colors[i], size = 1) +
+        ggplot2::geom_line(data = qr_line, ggplot2::aes_string(x = "independent_var", y = "dependent_var"), colour = colors[i], linewidth = 1) +
         ggplot2::scale_color_manual(values = c("In quantile" = colors[i], "Outside quantile" = "grey")) +
         ggplot2::labs(title = paste0("Quantile Regression: tau = ", quantiles[i]), x = independent_var, y = dependent_var) +
         ggplot2::theme_minimal() +
