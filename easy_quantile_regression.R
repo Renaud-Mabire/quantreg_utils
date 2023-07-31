@@ -1,4 +1,4 @@
-easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, covariates=NULL, multiple_plots = FALSE, ...) {
+easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, qr_summary = c("boot", "nid"),covariates=NULL, multiple_plots = FALSE, ...) {
   
   # Verifications
   if (!is.data.frame(df)) {
@@ -61,7 +61,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
     
     formula <- as.formula(formula_str) # convert the formula to a formula object
     qr <- quantreg::rq(formula, data = df, tau = quantiles[i], ...) # quantile regression estimation
-    sum_qr <- summary(qr, se = "boot") # summary of the quantile regression estimation with bootstrap standard errors
+    sum_qr <- summary(qr, se = qr_summary) # summary of the quantile regression estimation with bootstrap standard errors
     coeff <- coef(qr) # coefficients of the quantile regression
     range_var <- seq(min(df[[independent_var]]), max(df[[independent_var]]), length.out = 100) # range of the independent variable for the quantile regression line plot
     
