@@ -105,7 +105,7 @@ easy_quantile_regression <- function(df, dependent_var, independent_var, quantil
   }
   # Plot creation for multiple quantiles in one plot
   if (!multiple_plots) {
-    p <- p + ggplot2::geom_line(data = qr_lines, ggplot2::aes_string(x = "independent_var", y = "dependent_var", group = "group", color = "group"), size = 1) +
+    p <- p + ggplot2::geom_line(data = qr_lines, ggplot2::aes_string(x = "independent_var", y = "dependent_var", group = "group", color = "group"), linewidth = 1) +
       ggplot2::scale_color_manual(values = setNames(colors, unique(qr_lines$group)))
     
     result <- list(formulas = formulas, qrs = qrs, sum_qrs = sum_qrs, plots = p)
