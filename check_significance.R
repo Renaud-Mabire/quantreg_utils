@@ -1,3 +1,17 @@
+#' Check Significance of Variables in Quantile Regression
+#'
+#' Evaluates the significance of a specified variable across different quantiles in a quantile regression model.
+#'
+#' @param qr_fit Quantile regression model object.
+#' @param variable_name Name of the independent variable to check for significance.
+#' @param p_threshold P-value threshold for determining significance.
+#' @return A list of taus with non-significant p-values for the variable, or a message indicating all coefficients are significant if none are above the threshold.
+#' @export
+#' @examples
+#' # Example usage:
+#' # fit <- rq(y ~ x, tau = 0.5, data = data.frame(x = rnorm(100), y = rnorm(100)))
+#' # non_sig_taus <- check_significance(fit, "x", 0.05)
+#' # print(non_sig_taus)
 check_significance <- function(qr_fit, variable_name, p_threshold) {
   non_significant_taus <- list()  # List to store taus with non-significant p-values
   summary_fit <- summary(qr_fit)  # Obtain the summary of the fitted model

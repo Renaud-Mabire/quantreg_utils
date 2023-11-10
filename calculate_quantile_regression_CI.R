@@ -1,3 +1,22 @@
+#' Calculate Confidence Intervals for Quantile Regression
+#'
+#' Computes bootstrap confidence intervals for coefficients at specified quantiles in a quantile regression model.
+#'
+#' @param taus Numeric vector of quantiles at which to compute the confidence intervals.
+#' @param independent_var Name of the independent variable in the model.
+#' @param dependent_var Name of the dependent variable in the model.
+#' @param data Data frame containing the variables specified in independent_var and dependent_var.
+#' @param R Number of bootstrap replications for computing the confidence intervals (default is 100).
+#' @param ci_level Confidence level for the intervals (default is 0.95).
+#' @return A data frame with columns 'tau', 'lower', and 'upper', representing the quantile levels and the corresponding lower and upper bounds of the confidence intervals for the coefficient of the independent variable.
+#' @export
+#' @examples
+#' # Example usage:
+#' # taus <- c(0.25, 0.5, 0.75)
+#' # data <- data.frame(y = rnorm(100), x = rnorm(100))
+#' # ci_results <- calculate_quantile_regression_CI(taus, "x", "y", data)
+#' # print(ci_results)
+
 calculate_quantile_regression_CI <- function(taus, independent_var, dependent_var, data, R = 100, ci_level = 0.95) {
   # Defining the matrix X with the intercept and independent variable
   X <- cbind(1, data[[independent_var]])
