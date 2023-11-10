@@ -1,4 +1,4 @@
-easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, qr_summary = c("boot", "nid"),covariates=NULL, multiple_plots = FALSE, ...) {
+easy_quantile_regression <- function(df, dependent_var, independent_var, quantiles, qr_summary = c("boot", "nid"), covariates=NULL, multiple_plots = FALSE, ...) {
   
    # Verifications
   if (!is.data.frame(df)) {
