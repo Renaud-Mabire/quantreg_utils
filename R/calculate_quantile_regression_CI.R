@@ -31,7 +31,7 @@ calculate_quantile_regression_CI <- function(taus, independent_var, dependent_va
     QR.b <- boot.rq(X, data[[dependent_var]], tau = tau, R = R)
     # Calculating confidence intervals
     ci_quantiles <- c((1 - ci_level) / 2, 1 - (1 - ci_level) / 2)
-    IC95 <- t(apply(QR.b$coefficients, 2, quantile, prob = ci_quantiles)) %>% as.data.frame()
+    IC95 <- t(apply(QR.b$B, 2, quantile, prob = ci_quantiles)) %>% as.data.frame()
     # Storing the results in the vectors
     lower_bounds[i] <- IC95$`2.5%`[2]
     upper_bounds[i] <- IC95$`97.5%`[2]
